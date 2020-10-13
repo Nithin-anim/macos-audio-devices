@@ -1,6 +1,6 @@
 {
-  "name": "macos-audio-devices",
-  "version": "1.3.3",
+  "name": "@nithin1712/macos-audio-devices",
+  "version": "1.0.0",
   "description": "Get, set and configure the audio devices on macOS",
   "repository": "https://github.com/karaggeorge/macos-audio-devices",
   "funding": "https://github.com/sponsors/karaggeorge",
@@ -13,6 +13,7 @@
     "macos-audio-devices": "./audio-devices",
     "audio-devices": "./audio-devices"
   },
+  "private":false,
   "license": "MIT",
   "files": [
     "index.js",

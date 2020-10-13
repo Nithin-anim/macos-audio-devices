@@ -3,7 +3,7 @@ const path = require('path');
 const execa = require('execa');
 const electronUtil = require('electron-util/node');
 
-const binary = path.join(electronUtil.fixPathForAsarUnpack(__dirname), 'audio-devices');
+const binary = path.join(__dirname, 'audio-devices').replace('app.asar', 'app.asar.unpacked');
 
 const generateExport = (name, getArgs, callback) => {
   module.exports[name] = async (...inputs) => {
@@ -17,14 +17,14 @@ const generateExport = (name, getArgs, callback) => {
   };
 };
 
-const throwIfStderr = ({stderr}) => {
+const throwIfStderr = ({ stderr }) => {
   if (stderr) {
     throw new Error(stderr);
   }
 };
 
-const parseStdout = ({stdout, stderr}) => {
-  throwIfStderr({stderr});
+const parseStdout = ({ stdout, stderr }) => {
+  throwIfStderr({ stderr });
   return JSON.parse(stdout);
 };
 
@@ -48,13 +48,13 @@ generateExport('setDefaultInputDevice', deviceId => ['input', 'set', deviceId], 
 
 generateExport('setDefaultSystemDevice', deviceId => ['system', 'set', deviceId], throwIfStderr);
 
-generateExport('getOutputDeviceVolume', deviceId => ['volume', 'get', deviceId], ({stdout, stderr}) => stderr ? undefined : stdout);
+generateExport('getOutputDeviceVolume', deviceId => ['volume', 'get', deviceId], ({ stdout, stderr }) => stderr ? undefined : stdout);
 
 generateExport('setOutputDeviceVolume', (deviceId, volume) => ['volume', 'set', deviceId, volume], throwIfStderr);
 
 generateExport(
   'createAggregateDevice',
-  (name, mainDeviceId, otherDeviceIds, {multiOutput} = {}) => [
+  (name, mainDeviceId, otherDeviceIds, { multiOutput } = {}) => [
     'aggregate', 'create', '--json', (multiOutput && '--multi-output'), name, mainDeviceId, ...otherDeviceIds
   ].filter(Boolean),
   parseStdout
